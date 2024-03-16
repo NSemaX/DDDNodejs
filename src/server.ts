@@ -23,6 +23,9 @@ const port = 3000;
   
   })();
 
+  const eventEmitter : EventEmitterService= new EventEmitterService();
+  const eventHandler = new EventHandlers(eventEmitter.getInstance())
+  eventHandler.customerCreatedDomainEventHandler()
   
 app.get('/', (req: Request, res: Response)=>{
     res.send('Hello, this is Express + TypeScript');

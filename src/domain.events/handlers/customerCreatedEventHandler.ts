@@ -1,20 +1,20 @@
 import {EventEmitter} from 'events'
 import { CustomerCreatedDomainEvent } from '../events/customerCreatedDomainEvent';
-import { inject } from 'inversify';
-import { EventEmitterService } from '../../infrastructure/utility/EventEmitterService';
-import { Types } from '../../infrastructure/utility/DiTypes';
 
 export class EventHandlers{
 
-    @inject(Types.EVENT_EMITTER_SERVICE)
-    private eventEmitterService: EventEmitterService;
+   private eventEmitter: EventEmitter;
+
+   constructor(eventEmitter: EventEmitter){
+       this.eventEmitter = eventEmitter;
+   }
 
     customerCreatedDomainEventHandler() {
         console.log('Event FiredUp')
 
-        const eventEmitter =this.eventEmitterService.getInstance();
+        //const eventEmitter =this.eventEmitterService.getInstance();
 
-        eventEmitter.on('customerCreated', (customerCreatedDomainEvent) => {
+        this.eventEmitter.on('customerCreated', (customerCreatedDomainEvent) => {
             try{
                 this.sendEmail(customerCreatedDomainEvent);
             }

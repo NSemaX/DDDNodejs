@@ -47,11 +47,9 @@ export class CustomerService implements ICustomerService {
       
       console.log(`Event for ${createdCustomer} customer`)
       const customerCreatedDomainEvent: CustomerCreatedDomainEvent = {CustomerId:Customer.ID, Email: Customer.Email}; 
-   
-  
+ 
       const eventEmitter =this.eventEmitterService.getInstance();
       eventEmitter.emit('customerCreated', customerCreatedDomainEvent);
-      //this.eventEmitter.emit('customerCreated', customerCreatedDomainEvent);
 
       return createdCustomer;
     } catch (ex) {
