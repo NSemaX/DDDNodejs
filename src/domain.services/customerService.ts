@@ -2,6 +2,9 @@ import { inject, injectable } from "inversify";
 import { Types } from "../infrastructure/utility/DiTypes";
 import { ICustomerRepository } from "../infrastructure/repositories/customerRepository";
 import { CustomerRequest, CustomerResponse } from "../infrastructure/db/models/customer";
+import { CustomerCreatedDomainEvent } from "../domain.events/events/customerCreatedDomainEvent";
+import { EventEmitterService } from "../infrastructure/utility/EventEmitterService";
+import EventEmitter from "events";
 
 export interface ICustomerService {
 
@@ -17,7 +20,10 @@ export class CustomerService implements ICustomerService {
   @inject(Types.CUSTOMER_REPOSITORY)
   private CustomerRepository: ICustomerRepository;
 
+  @inject(Types.EVENT_EMITTER_SERVICE)
+  private eventEmitterService: EventEmitterService;
 
+  private eventEmitter: EventEmitter
 
   getAllCustomers = async (): Promise<Array<CustomerResponse>> => {
     try {
@@ -37,7 +43,17 @@ export class CustomerService implements ICustomerService {
 
   createCustomer = async (Customer: CustomerRequest): Promise<any> => {
     try {
-      return this.CustomerRepository.create(Customer);
+      const createdCustomer=this.CustomerRepository.create(Customer);
+      
+      console.log(`Event for ${createdCustomer} customer`)
+      const customerCreatedDomainEvent: CustomerCreatedDomainEvent = {CustomerId:Customer.ID, Email: Customer.Email}; 
+   
+  
+      const eventEmitter =this.eventEmitterService.getInstance();
+      eventEmitter.emit('customerCreated', customerCreatedDomainEvent);
+      //this.eventEmitter.emit('customerCreated', customerCreatedDomainEvent);
+
+      return createdCustomer;
     } catch (ex) {
       throw new Error("Unable to create Customer");
     }

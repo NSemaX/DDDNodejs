@@ -16,6 +16,8 @@ import { ICustomerRepository, CustomerRepository } from "./infrastructure/reposi
 import { ICustomerService, CustomerService } from "./domain.services/customerService";
 import { ICustomerController,CustomerController,} from "./application/controllers/customerController";
 import { IOrderAggregateService, OrderAggregateService } from "./application.service/orderAggregateService";
+import { EventEmitter } from "events";
+import { EventEmitterService } from "./infrastructure/utility/EventEmitterService";
 
 const dIContainer = new Container();
 
@@ -37,5 +39,7 @@ dIContainer.bind<ICustomerService>(Types.CUSTOMER_SERVICE).to(CustomerService);
 dIContainer.bind<ICustomerController>(Types.CUSTOMER_CONTROLLER).to(CustomerController);
 
 dIContainer.bind<IOrderAggregateService>(Types.ORDER_AGGREGATE_SERVICE).to(OrderAggregateService);
+
+dIContainer.bind<EventEmitterService>(Types.EVENT_EMITTER_SERVICE).to(EventEmitterService);
 
 export { dIContainer };
