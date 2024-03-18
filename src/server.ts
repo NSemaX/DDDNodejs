@@ -5,8 +5,7 @@ import "reflect-metadata";
 import { applicationRoutes } from './application/routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger.json";
-import EventEmitter from 'events';
-import { EventHandlers } from './domain.events/handlers/customerCreatedEventHandler';
+import { customerCreatedDomainEventHandler } from './domain.events/handlers/customerCreatedEventHandler';
 import { EventEmitterService } from './infrastructure/utility/EventEmitterService';
 
 const app: Express = express();
@@ -23,8 +22,9 @@ const port = 3000;
   
   })();
 
+  //initialize domain events
   const eventEmitter : EventEmitterService= new EventEmitterService();
-  const eventHandler = new EventHandlers(eventEmitter.getInstance())
+  const eventHandler = new customerCreatedDomainEventHandler(eventEmitter.getInstance())
   eventHandler.customerCreatedDomainEventHandler()
   
 app.get('/', (req: Request, res: Response)=>{

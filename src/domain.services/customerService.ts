@@ -4,7 +4,6 @@ import { ICustomerRepository } from "../infrastructure/repositories/customerRepo
 import { CustomerRequest, CustomerResponse } from "../infrastructure/db/models/customer";
 import { CustomerCreatedDomainEvent } from "../domain.events/events/customerCreatedDomainEvent";
 import { EventEmitterService } from "../infrastructure/utility/EventEmitterService";
-import EventEmitter from "events";
 
 export interface ICustomerService {
 
@@ -23,7 +22,6 @@ export class CustomerService implements ICustomerService {
   @inject(Types.EVENT_EMITTER_SERVICE)
   private eventEmitterService: EventEmitterService;
 
-  private eventEmitter: EventEmitter
 
   getAllCustomers = async (): Promise<Array<CustomerResponse>> => {
     try {
@@ -45,7 +43,7 @@ export class CustomerService implements ICustomerService {
     try {
       const createdCustomer=this.CustomerRepository.create(Customer);
       
-      console.log(`Event for ${createdCustomer} customer`)
+      console.log(`Event for ${Customer} customer`)
       const customerCreatedDomainEvent: CustomerCreatedDomainEvent = {CustomerId:Customer.ID, Email: Customer.Email}; 
  
       const eventEmitter =this.eventEmitterService.getInstance();

@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events'
 import { CustomerCreatedDomainEvent } from '../events/customerCreatedDomainEvent';
 
-export class EventHandlers{
+export class customerCreatedDomainEventHandler{
 
    private eventEmitter: EventEmitter;
 
@@ -11,8 +11,6 @@ export class EventHandlers{
 
     customerCreatedDomainEventHandler() {
         console.log('Event FiredUp')
-
-        //const eventEmitter =this.eventEmitterService.getInstance();
 
         this.eventEmitter.on('customerCreated', (customerCreatedDomainEvent) => {
             try{
