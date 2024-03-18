@@ -1,6 +1,6 @@
 import { ValueObject } from "../seedwork/valueObject";
 
-interface IAddressProps {
+interface IAddress {
     streetAddress: string,
     city: string,
     state: string,
@@ -8,7 +8,7 @@ interface IAddressProps {
   }
   
   interface IAddressValueObjectProps {
-    value: IAddressProps;
+    value: IAddress;
   }
   
   export class Address extends ValueObject<IAddressValueObjectProps> {
@@ -16,11 +16,11 @@ interface IAddressProps {
       super(props);
     }
   
-    get value(): IAddressProps {
+    get value(): IAddress {
       return this.props.value;
     }
   
-    public static create(props: IAddressProps) {
+    public static create(props: IAddress) {
       return new Address({ value: props });
     }
   }

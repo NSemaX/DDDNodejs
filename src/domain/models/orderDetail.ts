@@ -27,6 +27,10 @@ class OrderDetail extends Entity<IOrderDetail> {
       }
     
       get Count() {
+        if (this._Count <= 0)
+        {
+          throw new Error('Invalid number of units');
+        }
         return this._Count;
       }
     
