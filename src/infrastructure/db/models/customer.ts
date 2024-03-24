@@ -6,6 +6,10 @@ export interface ISequelizeCustomer {
     Surname: string;
     Email: string;
     Password: string;
+    StreetAddress: string;
+    City: string;
+    State: string;
+    Zip: string;
     Status: number;
 }
 
@@ -18,6 +22,10 @@ class SequelizeCustomer extends Model<ISequelizeCustomer,CustomerRequest> implem
     public Surname!: string
     public Email!: string
     public Password!: string
+    public StreetAddress: string;
+    public City: string;
+    public State: string;
+    public Zip: string;
     public Status!: number
 
     static initModel(sequelize: Sequelize): void {
@@ -41,6 +49,18 @@ class SequelizeCustomer extends Model<ISequelizeCustomer,CustomerRequest> implem
                     type: DataTypes.STRING
                 },
                 Password: {
+                    type: DataTypes.STRING
+                },
+                StreetAddress: {
+                    type: DataTypes.STRING
+                },
+                City: {
+                    type: DataTypes.STRING
+                },
+                State: {
+                    type: DataTypes.STRING
+                },
+                Zip: {
                     type: DataTypes.STRING
                 },
                 Status: {

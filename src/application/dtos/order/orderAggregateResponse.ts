@@ -1,5 +1,5 @@
-import { CustomerResponse } from "../../infrastructure/db/models/customer";
-import { ProductResponse } from "../../infrastructure/db/models/product";
+import { CustomerResponse } from "../../../infrastructure/db/models/customer";
+import { ProductResponse } from "../../../infrastructure/db/models/product";
 
 
 export class orderAggregateResponse {
@@ -25,4 +25,5 @@ export class orderAggregateResponse {
     CreatedDate: Date;
     UpdatedDate: Date;
   }
+  
   export default orderAggregateResponse

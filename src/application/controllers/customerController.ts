@@ -3,8 +3,8 @@ import { inject, injectable } from "inversify";
 import { StatusCode } from "../../infrastructure/utility/statusCodes";
 import { Types } from "../../infrastructure/utility/DiTypes";
 import { ICustomerService } from "../../domain.services/customerService";
-import { CustomerRequest } from "../../infrastructure/db/models/customer";
-
+import { CreateCustomerRequest } from "../dtos/customer/createCustomerRequest";
+import UpdateCustomerRequest from "../dtos/customer/updateCustomerRequest";
 
 
 export interface ICustomerController {
@@ -50,8 +50,8 @@ export class CustomerController implements ICustomerController {
   
   public createCustomer = async (req: Request, res: Response) => {
     try {
-      const { Name,Surname,Email,Password,Status } = req.body;
-      const customer: CustomerRequest = {Name,Surname,Email,Password,Status}; 
+      const { Name,Surname,Email,Password, Address :{ StreetAddress, City, State, Zip},  } = req.body;
+      const customer: CreateCustomerRequest = {Name,Surname,Email,Password, Address: { StreetAddress, City, State, Zip}}; 
       const Customer = await this.CustomerService.createCustomer(customer);
       res.status(StatusCode.SUCCESS).send();
     } catch (ex) {
@@ -64,8 +64,8 @@ export class CustomerController implements ICustomerController {
 
   public updateCustomer = async (req: Request, res: Response) => {
     try {
-      const { Name,Surname,Email,Password,Status } = req.body;
-      const customer: CustomerRequest = {Name, Surname, Email, Password, Status}; 
+      const { ID, Name, Surname, Email, Password, Status, Address: {StreetAddress, City,State,Zip} } = req.body;
+      const customer: UpdateCustomerRequest = {ID, Name, Surname, Email, Password, Status, Address: {StreetAddress, City,State,Zip}}; 
       const id= customer.ID!;
       const updatedCustomerCount = await this.CustomerService.updateCustomer(id, customer);
       res.status(StatusCode.SUCCESS).send();

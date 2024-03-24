@@ -6,7 +6,7 @@ export const vars = {
     dbPassword: process.env.DB_PASSWORD || 'admin12345',
     dbPort: Number(process.env.DB_PORT) || 3306,
     dbSync: process.env.DB_SYNC == 'true',
-    dbName: process.env.DB_SERVICE || 'nsshop',
+    dbName: process.env.DB_SERVICE || 'nsshop_ddd',
     dbSslModeRequire: process.env.DB_SSL_MODE_REQUIRE == 'true',
     dbDialect: process.env.DB_DIALECT || 'mysql',
     dbSchema: process.env.DB_SCHEMA || 'public',

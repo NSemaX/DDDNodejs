@@ -14,4 +14,5 @@ export class orderAggregateRequest  {
     ProductId: number;
     Count: number;
   }
+
   export default orderAggregateRequest

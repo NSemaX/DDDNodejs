@@ -1,10 +1,10 @@
 import { ValueObject } from "../seedwork/valueObject";
 
 interface IAddress {
-    streetAddress: string,
-    city: string,
-    state: string,
-    zip: string,
+    StreetAddress: string,
+    City: string,
+    State: string,
+    Zip: string,
   }
   
   interface IAddressValueObjectProps {

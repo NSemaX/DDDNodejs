@@ -1,11 +1,13 @@
 import { IAggregateRoot } from "../seedwork/IAggregateRoot";
 import { Entity } from "../seedwork/entity";
+import { Address } from "./address";
 
 export interface ICustomer {
     Name: string;
     Surname: string;
     Email: string;
     Password: string;
+    Address: Address;
     Status: number;
 }
 
@@ -14,14 +16,16 @@ class Customer extends Entity<ICustomer> {
     private _Surname!: string;
     private _Email!: string;
     public _Password!: string
+    public _Address!: Address
     public _Status!: number
 
-    constructor({ Name, Surname, Email, Password, Status}: ICustomer, id?: number) {
+    constructor({ Name, Surname, Email, Password, Address,Status}: ICustomer, id?: number) {
         super(id);
         this._Name = Name;
         this._Surname = Surname;
         this._Email = Email;
         this._Password = Password;
+        this._Address= Address;
         this._Status = Status;
       }
 
@@ -39,6 +43,10 @@ class Customer extends Entity<ICustomer> {
 
       get Password() {
         return this._Password;
+      }
+
+      get Address() {
+        return this._Address;
       }
     
       get Status() {

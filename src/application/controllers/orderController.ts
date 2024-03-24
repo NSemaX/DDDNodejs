@@ -5,7 +5,7 @@ import { StatusCode } from "../../infrastructure/utility/statusCodes";
 import { Types } from "../../infrastructure/utility/DiTypes";
 import { IOrderService } from "../../domain.services/orderService";
 import { IOrderAggregateService } from "../../application.service/orderAggregateService";
-import orderAggregateRequest from "../dtos/orderAggregateRequest";
+import orderAggregateRequest from "../dtos/order/orderAggregateRequest";
 import { OrderRequest } from "../../infrastructure/db/models/order";
 
 

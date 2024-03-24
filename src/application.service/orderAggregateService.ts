@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../infrastructure/utility/DiTypes";
 import { IOrderRepository } from "../infrastructure/repositories/orderRepository";
-import orderAggregateResponse, { OrderDTO, OrderDetailDTO } from "../application/dtos/orderAggregateResponse";
+import orderAggregateResponse, { OrderDTO, OrderDetailDTO } from "../application/dtos/order/orderAggregateResponse";
 import { IOrderDetailRepository } from "../infrastructure/repositories/orderDetailRepository";
 import { IProductRepository } from "../infrastructure/repositories/productRepository";
 import { ICustomerRepository } from "../infrastructure/repositories/customerRepository";
 import OrderAggregate from "../domain/aggregates/orderAggregate";
-import orderAggregateRequest from "../application/dtos/orderAggregateRequest";
+import orderAggregateRequest from "../application/dtos/order/orderAggregateRequest";
 import { OrderDetailResponse } from "../infrastructure/db/models/orderDetail";
 
 export interface IOrderAggregateService {
