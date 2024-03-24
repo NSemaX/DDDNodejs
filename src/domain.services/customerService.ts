@@ -5,7 +5,6 @@ import { CustomerCreatedDomainEvent } from "../domain.events/events/customerCrea
 import { EventEmitterService } from "../infrastructure/utility/EventEmitterService";
 import GetCustomerResponse from "../application/dtos/customer/getCustomerResponse";
 import CreateCustomerRequest from "../application/dtos/customer/createCustomerRequest";
-import { SequelizeCustomer } from "../infrastructure/db/models";
 import UpdateCustomerRequest from "../application/dtos/customer/updateCustomerRequest";
 import { CustomerRequest } from "../infrastructure/db/models/customer";
 
@@ -43,6 +42,7 @@ export class CustomerService implements ICustomerService {
           Status:customerItem.Status,
           Address:{StreetAddress: customerItem.StreetAddress, City: customerItem.City , State: customerItem.State ,Zip: customerItem.Zip},
           };
+          customerList.push(customer);
       });
 
       return customerList;
@@ -72,18 +72,20 @@ export class CustomerService implements ICustomerService {
   createCustomer = async (Customer: CreateCustomerRequest): Promise<any> => {
     try {
 
-      const customerDB= new SequelizeCustomer();
-      customerDB.Name=Customer.Name;
-      customerDB.Surname=Customer.Surname;
-      customerDB.Email=Customer.Email;
-      customerDB.Password=Customer.Password;
-      customerDB.StreetAddress=Customer.Address.StreetAddress;
-      customerDB.City=Customer.Address.City;
-      customerDB.State=Customer.Address.State;
-      customerDB.Zip=Customer.Address.Zip;
-      customerDB.Status=1;
+      const customer: CustomerRequest = 
+      { 
+        Name:Customer.Name,
+        Surname:Customer.Surname,
+        Email:Customer.Email,
+        Password:Customer.Password,
+        Status:1,
+        StreetAddress: Customer.Address.StreetAddress,
+        City: Customer.Address.City , 
+        State: Customer.Address.State ,
+        Zip: Customer.Address.Zip
+      }
 
-      const createdCustomer=await this.CustomerRepository.create(customerDB);
+      const createdCustomer=await this.CustomerRepository.create(customer);
       
       console.log(`Event for ${Customer} customer`)
       const customerCreatedDomainEvent: CustomerCreatedDomainEvent = {CustomerId:createdCustomer.ID, Email: Customer.Email}; 

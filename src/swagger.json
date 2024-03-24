@@ -820,6 +820,28 @@
   },
   "components": {
     "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "StreetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "City": {
+            "type": "string",
+            "nullable": true
+          },
+          "State": {
+            "type": "string",
+            "nullable": true
+          },
+          "Zip": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateCustomerRequest": {
         "type": "object",
         "properties": {
@@ -838,6 +860,9 @@
           "Password": {
             "type": "string",
             "nullable": true
+          },
+          "Address": {
+            "$ref": "#/components/schemas/Address"
           },
           "Status": {
             "type": "integer",
@@ -937,7 +962,7 @@
       "GetCustomerResponse": {
         "type": "object",
         "properties": {
-          "Id": {
+          "ID": {
             "type": "integer",
             "format": "int32"
           },
@@ -953,9 +978,8 @@
             "type": "string",
             "nullable": true
           },
-          "Password": {
-            "type": "string",
-            "nullable": true
+          "Address": {
+            "$ref": "#/components/schemas/Address"
           },
           "Status": {
             "type": "integer",
@@ -1155,6 +1179,9 @@
           "Password": {
             "type": "string",
             "nullable": true
+          },
+          "Address": {
+            "$ref": "#/components/schemas/Address"
           },
           "Status": {
             "type": "integer",
