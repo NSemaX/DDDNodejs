@@ -10,7 +10,7 @@ export interface ICustomer {
     Status: number;
 }
 
-class Customer extends Entity<ICustomer> {
+export class Customer extends Entity<ICustomer> {
 
     private static EMAIL_REGEX = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i
     private static MIN_PASSWORD_LENGTH = 4;

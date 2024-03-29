@@ -12,6 +12,10 @@ interface IAddress {
   }
   
   export class Address extends ValueObject<IAddressValueObjectProps> {
+      StreetAddress: string;
+      City: string;
+      State: string;
+      Zip: string;
     private constructor(props: IAddressValueObjectProps) {
       super(props);
     }

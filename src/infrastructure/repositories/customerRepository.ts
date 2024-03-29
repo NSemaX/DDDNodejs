@@ -3,11 +3,12 @@ import { inject, injectable } from "inversify";
 import "reflect-metadata";
 import { SequelizeCustomer } from '../db/models';
 import { CustomerRequest, CustomerResponse } from '../db/models/customer';
+import { Customer, ICustomer } from '../../domain/models/customer';
 
 export interface ICustomerRepository {
     getAll: () => Promise<Array<CustomerResponse>>;
     getById: (id: number) => Promise<CustomerResponse>;
-    create: (Customer: CustomerRequest) => Promise<any>;
+    create: (Customer: Customer) => Promise<any>;
     update: (id: number, Customer: Partial<CustomerRequest>) => Promise<number>;
     delete: (id: any) => Promise<boolean>;
 }
@@ -30,8 +31,22 @@ export class CustomerRepository implements ICustomerRepository {
         return item
     }
 
-    create = async (payload: CustomerRequest): Promise<any> => {
-        const item = await SequelizeCustomer.create(payload)
+    create = async (payload: Customer): Promise<any> => {
+
+        const customer: CustomerRequest = 
+        { 
+          Name:payload.Name,
+          Surname:payload.Surname,
+          Email:payload.Email,
+          Password:payload.Password,
+          Status:1,
+          StreetAddress: payload.Address.StreetAddress,
+          City: payload.Address.City , 
+          State: payload.Address.State ,
+          Zip: payload.Address.Zip
+        }
+
+        const item = await SequelizeCustomer.create(customer)
         return item.ID
     }
 
