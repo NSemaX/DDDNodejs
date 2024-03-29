@@ -26,6 +26,10 @@ class Order extends Entity<IOrder> {
       }
     
       get TotalAmount() {
+        if (this._TotalAmount <= 0)
+        {
+          throw new Error('Invalid number of Total Amount');
+        }
         return this._TotalAmount;
       }
     
