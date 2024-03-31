@@ -5,7 +5,7 @@ export interface IProduct {
     Price: number;
 }
 
-class Product extends Entity<IProduct> {
+export class Product extends Entity<IProduct> {
 
     private  _Name!: string
     private  _Price!: number

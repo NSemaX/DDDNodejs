@@ -6,10 +6,10 @@ export interface ISequelizeProduct {
     Price: number;
 }
 
-export interface ProductRequest extends Optional<ISequelizeProduct, 'ID'> {}
-export interface ProductResponse extends Required<ISequelizeProduct> { } //CreatedAt: Date, UpdatedAt: Date
+export interface SequelizeProductRequest extends Optional<ISequelizeProduct, 'ID'> {}
+export interface SequelizeProductResponse extends Required<ISequelizeProduct> { } //CreatedAt: Date, UpdatedAt: Date
 
-class SequelizeProduct extends Model<ISequelizeProduct,ProductRequest> implements ISequelizeProduct {
+class SequelizeProduct extends Model<ISequelizeProduct,SequelizeProductRequest> implements ISequelizeProduct {
     public ID!: number
     public Name!: string
     public Price!: number

@@ -2,14 +2,14 @@ import { Op } from 'sequelize'
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
 import { SequelizeCustomer } from '../db/models';
-import { CustomerRequest, CustomerResponse } from '../db/models/customer';
+import { SequelizeCustomerRequest, SequelizeCustomerResponse } from '../db/models/customer';
 import { Customer, ICustomer } from '../../domain/models/customer';
 
 export interface ICustomerRepository {
-    getAll: () => Promise<Array<CustomerResponse>>;
-    getById: (id: number) => Promise<CustomerResponse>;
-    create: (Customer: Customer) => Promise<any>;
-    update: (id: number, Customer: Partial<CustomerRequest>) => Promise<number>;
+    getAll: () => Promise<Array<SequelizeCustomerResponse>>;
+    getById: (id: number) => Promise<SequelizeCustomerResponse>;
+    create: (customer: Customer) => Promise<any>;
+    update: (id: number, customer: Partial<SequelizeCustomerRequest>) => Promise<number>;
     delete: (id: any) => Promise<boolean>;
 }
 
@@ -17,11 +17,11 @@ export interface ICustomerRepository {
 @injectable()
 export class CustomerRepository implements ICustomerRepository {
 
-    getAll = async (): Promise<Array<CustomerResponse>> => {
+    getAll = async (): Promise<Array<SequelizeCustomerResponse>> => {
         return SequelizeCustomer.findAll()
     }
 
-    getById = async (id: number): Promise<CustomerResponse> => {
+    getById = async (id: number): Promise<SequelizeCustomerResponse> => {
         const item = await SequelizeCustomer.findByPk(id)
 
         if (!item) {
@@ -33,7 +33,7 @@ export class CustomerRepository implements ICustomerRepository {
 
     create = async (payload: Customer): Promise<any> => {
 
-        const customer: CustomerRequest = 
+        const customer: SequelizeCustomerRequest = 
         { 
           Name:payload.Name,
           Surname:payload.Surname,
@@ -51,7 +51,7 @@ export class CustomerRepository implements ICustomerRepository {
     }
 
 
-    update = async (ID: number, payload: Partial<CustomerRequest>): Promise<number> => {
+    update = async (ID: number, payload: Partial<SequelizeCustomerRequest>): Promise<number> => {
         const item = await SequelizeCustomer.findByPk(ID)
 
         if (!item) {

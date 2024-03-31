@@ -10,10 +10,10 @@ export interface ISequelizeOrder {
 }
 
 
-export interface OrderRequest extends Optional<ISequelizeOrder, 'ID'> {}
-export interface OrderResponse extends Required<ISequelizeOrder> {}
+export interface SequelizeOrderRequest extends Optional<ISequelizeOrder, 'ID'> {}
+export interface SequelizeOrderResponse extends Required<ISequelizeOrder> {}
 
-class SequelizeOrder extends Model<ISequelizeOrder,OrderRequest> implements ISequelizeOrder {
+class SequelizeOrder extends Model<ISequelizeOrder,SequelizeOrderRequest> implements ISequelizeOrder {
     public ID!: number
     public CustomerId!: number
     public TotalAmount!: number

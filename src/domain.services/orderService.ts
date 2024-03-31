@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../infrastructure/utility/DiTypes";
 import { IOrderRepository } from "../infrastructure/repositories/orderRepository";
-import { OrderRequest, OrderResponse } from "../infrastructure/db/models/order";
+import { SequelizeOrderRequest, SequelizeOrderResponse } from "../infrastructure/db/models/order";
 
 export interface IOrderService {
 
-  getOrderById: (Id: number) => Promise<OrderResponse>;
-  getAllOrders: () => Promise<Array<OrderResponse>>;
-  createOrder: (order: OrderRequest) => Promise<any>;
-  updateOrder: (Id: number, order: OrderRequest) => Promise<number>;
+  getOrderById: (Id: number) => Promise<SequelizeOrderResponse>;
+  getAllOrders: () => Promise<Array<SequelizeOrderResponse>>;
+  createOrder: (order: SequelizeOrderRequest) => Promise<any>;
+  updateOrder: (Id: number, order: SequelizeOrderRequest) => Promise<number>;
   deleteOrder: (Id: number) => Promise<boolean>;
 }
 
@@ -19,7 +19,7 @@ export class OrderService implements IOrderService {
 
 
 
-  getAllOrders = async (): Promise<Array<OrderResponse>> => {
+  getAllOrders = async (): Promise<Array<SequelizeOrderResponse>> => {
     try {
       return this.orderRepository.getAll();
     } catch {
@@ -27,7 +27,7 @@ export class OrderService implements IOrderService {
     }
   };
 
-  getOrderById = async (Id: number): Promise<OrderResponse> => {
+  getOrderById = async (Id: number): Promise<SequelizeOrderResponse> => {
     try {
       return this.orderRepository.getById(Id);
     } catch {
@@ -35,7 +35,7 @@ export class OrderService implements IOrderService {
     }
   };
 
-  createOrder = async (order: OrderRequest): Promise<any> => {
+  createOrder = async (order: SequelizeOrderRequest): Promise<any> => {
     try {
       return this.orderRepository.create(order);
     } catch (ex) {
@@ -43,7 +43,7 @@ export class OrderService implements IOrderService {
     }
   };
 
-  updateOrder = async (Id: number, order: OrderRequest): Promise<number> => {
+  updateOrder = async (Id: number, order: SequelizeOrderRequest): Promise<number> => {
     try {
       return this.orderRepository.update(Id, order);
     } catch {

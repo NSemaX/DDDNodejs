@@ -7,7 +7,7 @@ export interface IOrder {
     PurchasedDate: Date;
 }
 
-class Order extends Entity<IOrder> {
+export class Order extends Entity<IOrder> {
     private  _CustomerId!: number
     private  _TotalAmount!: number
     private  _Status!: number

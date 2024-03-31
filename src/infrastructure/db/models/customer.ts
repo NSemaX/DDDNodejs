@@ -13,10 +13,10 @@ export interface ISequelizeCustomer {
     Status: number;
 }
 
-export interface CustomerRequest extends Optional<ISequelizeCustomer, 'ID'> {}
-export interface CustomerResponse extends Required<ISequelizeCustomer> {}
+export interface SequelizeCustomerRequest extends Optional<ISequelizeCustomer, 'ID'> {}
+export interface SequelizeCustomerResponse extends Required<ISequelizeCustomer> {}
 
-class SequelizeCustomer extends Model<ISequelizeCustomer,CustomerRequest> implements ISequelizeCustomer {
+class SequelizeCustomer extends Model<ISequelizeCustomer,SequelizeCustomerRequest> implements ISequelizeCustomer {
     public ID!: number
     public Name!: string
     public Surname!: string

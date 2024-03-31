@@ -6,7 +6,7 @@ import { Types } from "../../infrastructure/utility/DiTypes";
 import { IOrderService } from "../../domain.services/orderService";
 import { IOrderAggregateService } from "../../application.service/orderAggregateService";
 import orderAggregateRequest from "../dtos/order/orderAggregateRequest";
-import { OrderRequest } from "../../infrastructure/db/models/order";
+import { SequelizeOrderRequest } from "../../infrastructure/db/models/order";
 
 
 
@@ -57,7 +57,7 @@ export class OrderController implements IOrderController {
   public createOrder = async (req: Request, res: Response) => {
     try {
       const { Order :{ CustomerId, TotalAmount, Status, PurchasedDate}, OrderDetails: [{ProductId, Count}]} = req.body;
-      const orderReq: orderAggregateRequest = {Order:{ CustomerId, TotalAmount, Status, PurchasedDate},OrderDetails: [{ ProductId, Count}]}; 
+      const orderReq: orderAggregateRequest = {Order:{ CustomerId, PurchasedDate},OrderDetails: [{ ProductId, Count}]}; 
       const order = await this.orderAggregateService.createOrderAggreate(orderReq);
       res.status(StatusCode.SUCCESS).send();
     } catch (ex) {
@@ -71,7 +71,7 @@ export class OrderController implements IOrderController {
   public updateOrder = async (req: Request, res: Response) => {
     try {
       const { ID, CustomerId, TotalAmount, Status, PurchasedDate } = req.body;
-      const order: OrderRequest = {ID, CustomerId, TotalAmount, Status, PurchasedDate}; 
+      const order: SequelizeOrderRequest = {ID, CustomerId, TotalAmount, Status, PurchasedDate}; 
       const id= order.ID!;
       const updatedOrderCount = await this.orderService.updateOrder(id, order);
       res.status(StatusCode.SUCCESS).send();

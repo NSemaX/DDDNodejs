@@ -2,15 +2,15 @@ import { Op } from 'sequelize'
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
 import { SequelizeOrderDetail } from '../db/models';
-import { OrderDetailRequest, OrderDetailResponse } from '../db/models/orderDetail';
+import { SequelizeOrderDetailRequest, SequelizeOrderDetailResponse } from '../db/models/orderDetail';
 
 
 export interface IOrderDetailRepository {
-    getAll: () => Promise<Array<OrderDetailResponse>>;
-    getById: (id: number) => Promise<OrderDetailResponse>;
-    getByOrderId: (id: number) => Promise<Array<OrderDetailResponse>>;
-    create: (OrderDetail: OrderDetailRequest) => Promise<any>;
-    update: (id: number, OrderDetail: Partial<OrderDetailRequest>) => Promise<number>;
+    getAll: () => Promise<Array<SequelizeOrderDetailResponse>>;
+    getById: (id: number) => Promise<SequelizeOrderDetailResponse>;
+    getByOrderId: (id: number) => Promise<Array<SequelizeOrderDetailResponse>>;
+    create: (orderDetail: SequelizeOrderDetailRequest) => Promise<any>;
+    update: (id: number, orderDetail: Partial<SequelizeOrderDetailRequest>) => Promise<number>;
     delete: (id: any) => Promise<boolean>;
 }
 
@@ -18,11 +18,11 @@ export interface IOrderDetailRepository {
 @injectable()
 export class OrderDetailRepository implements IOrderDetailRepository {
 
-    getAll = async (): Promise<Array<OrderDetailResponse>> => {
+    getAll = async (): Promise<Array<SequelizeOrderDetailResponse>> => {
         return SequelizeOrderDetail.findAll()
     }
 
-    getById = async (id: number): Promise<OrderDetailResponse> => {
+    getById = async (id: number): Promise<SequelizeOrderDetailResponse> => {
         const item = await SequelizeOrderDetail.findByPk(id)
 
         if (!item) {
@@ -32,7 +32,7 @@ export class OrderDetailRepository implements IOrderDetailRepository {
         return item
     }
 
-    getByOrderId = async (key: number): Promise<Array<OrderDetailResponse>> => {
+    getByOrderId = async (key: number): Promise<Array<SequelizeOrderDetailResponse>> => {
         const items = await SequelizeOrderDetail.findAll({
             where: {
                 OrderId: key,
@@ -46,13 +46,13 @@ export class OrderDetailRepository implements IOrderDetailRepository {
         return items
     }
 
-    create = async (payload: OrderDetailRequest): Promise<any> => {
+    create = async (payload: SequelizeOrderDetailRequest): Promise<any> => {
         const item = await SequelizeOrderDetail.create(payload)
         return item.ID
     }
 
 
-    update = async (ID: number, payload: Partial<OrderDetailRequest>): Promise<number> => {
+    update = async (ID: number, payload: Partial<SequelizeOrderDetailRequest>): Promise<number> => {
         const item = await SequelizeOrderDetail.findByPk(ID)
 
         if (!item) {

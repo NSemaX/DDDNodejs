@@ -6,7 +6,7 @@ import { EventEmitterService } from "../infrastructure/utility/EventEmitterServi
 import GetCustomerResponse from "../application/dtos/customer/getCustomerResponse";
 import CreateCustomerRequest from "../application/dtos/customer/createCustomerRequest";
 import UpdateCustomerRequest from "../application/dtos/customer/updateCustomerRequest";
-import { CustomerRequest } from "../infrastructure/db/models/customer";
+import { SequelizeCustomerRequest } from "../infrastructure/db/models/customer";
 import { Customer, ICustomer } from "../domain/models/customer";
 import { Address } from "../domain/models/address";
 import { ValueObject } from "../domain/seedwork/valueObject";
@@ -104,7 +104,7 @@ export class CustomerService implements ICustomerService {
 
   updateCustomer = async (Id: number, Customer: UpdateCustomerRequest): Promise<number> => {
     try {
-      const customer: CustomerRequest =
+      const customer: SequelizeCustomerRequest =
       {
         ID: Customer.ID,
         Name: Customer.Name,

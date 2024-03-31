@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { StatusCode } from "../../infrastructure/utility/statusCodes";
 import { Types } from "../../infrastructure/utility/DiTypes";
 import { IOrderDetailService } from "../../domain.services/orderDetailService";
-import { OrderDetailRequest } from "../../infrastructure/db/models/orderDetail";
+import { SequelizeOrderDetailRequest } from "../../infrastructure/db/models/orderDetail";
 
 
 
@@ -50,7 +50,7 @@ export class OrderDetailController implements IOrderDetailController {
   public createOrderDetail = async (req: Request, res: Response) => {
     try {
       const { OrderId,ProductId,Count } = req.body;
-      const orderDetail: OrderDetailRequest = {OrderId,ProductId,Count}; 
+      const orderDetail: SequelizeOrderDetailRequest = {OrderId,ProductId,Count}; 
       const OrderDetail = await this.OrderDetailService.createOrderDetail(orderDetail);
       res.status(StatusCode.SUCCESS).send();
     } catch (ex) {
@@ -63,7 +63,7 @@ export class OrderDetailController implements IOrderDetailController {
   public updateOrderDetail = async (req: Request, res: Response) => {
     try {
       const {ID, OrderId,ProductId,Count } = req.body;
-      const orderDetail: OrderDetailRequest = {ID, OrderId,ProductId,Count}; 
+      const orderDetail: SequelizeOrderDetailRequest = {ID, OrderId,ProductId,Count}; 
       const id=orderDetail.ID!;
       const updatedOrderDetailCount = await this.OrderDetailService.updateOrderDetail(id, orderDetail);
       res.status(StatusCode.SUCCESS).send();

@@ -2,13 +2,13 @@ import { Op } from 'sequelize'
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
 import { SequelizeProduct } from '../db/models';
-import { ProductRequest, ProductResponse } from '../db/models/product';
+import { SequelizeProductRequest, SequelizeProductResponse } from '../db/models/product';
 
 export interface IProductRepository {
-    getAll: () => Promise<Array<ProductResponse>>;
-    getById: (id: number) => Promise<ProductResponse>;
-    create: (Product: ProductRequest) => Promise<any>;
-    update: (id: number, Product: Partial<ProductRequest>) => Promise<number>;
+    getAll: () => Promise<Array<SequelizeProductResponse>>;
+    getById: (id: number) => Promise<SequelizeProductResponse>;
+    create: (product: SequelizeProductRequest) => Promise<any>;
+    update: (id: number, product: Partial<SequelizeProductRequest>) => Promise<number>;
     delete: (id: any) => Promise<boolean>;
 }
 
@@ -16,11 +16,11 @@ export interface IProductRepository {
 @injectable()
 export class ProductRepository implements IProductRepository {
 
-    getAll = async (): Promise<Array<ProductResponse>> => {
+    getAll = async (): Promise<Array<SequelizeProductResponse>> => {
         return SequelizeProduct.findAll()
     }
 
-    getById = async (id: number): Promise<ProductResponse> => {
+    getById = async (id: number): Promise<SequelizeProductResponse> => {
         const item = await SequelizeProduct.findByPk(id)
 
         if (!item) {
@@ -30,13 +30,13 @@ export class ProductRepository implements IProductRepository {
         return item
     }
 
-    create = async (payload: ProductRequest): Promise<any> => {
+    create = async (payload: SequelizeProductRequest): Promise<any> => {
         const item = await SequelizeProduct.create(payload)
         return item.ID
     }
 
 
-    update = async (ID: number, payload: Partial<ProductRequest>): Promise<number> => {
+    update = async (ID: number, payload: Partial<SequelizeProductRequest>): Promise<number> => {
         const item = await SequelizeProduct.findByPk(ID)
 
         if (!item) {

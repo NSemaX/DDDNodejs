@@ -1,5 +1,5 @@
-import { CustomerResponse } from "../../../infrastructure/db/models/customer";
-import { ProductResponse } from "../../../infrastructure/db/models/product";
+import { SequelizeCustomerResponse } from "../../../infrastructure/db/models/customer";
+import { SequelizeProductResponse } from "../../../infrastructure/db/models/product";
 
 
 export class orderAggregateResponse {
@@ -9,7 +9,7 @@ export class orderAggregateResponse {
 
   export class OrderDTO {
     ID: number;
-    Customer: CustomerResponse;
+    Customer: SequelizeCustomerResponse;
     TotalAmount: number;
     Status: number;
     PurchasedDate: Date;
@@ -20,7 +20,7 @@ export class orderAggregateResponse {
   export class OrderDetailDTO {
     ID: number;
     OrderId: number;
-    Product: ProductResponse;
+    Product: SequelizeProductResponse;
     Count: number;
     CreatedDate: Date;
     UpdatedDate: Date;

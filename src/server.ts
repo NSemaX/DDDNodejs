@@ -7,6 +7,9 @@ import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger.json";
 import { customerCreatedDomainEventHandler } from './domain.events/handlers/customerCreatedEventHandler';
 import { EventEmitterService } from './infrastructure/utility/EventEmitterService';
+import { orderCreatedDomainEventHandler } from './domain.events/handlers/orderCreatedEventHandler';
+
+
 
 const app: Express = express();
 const port = 3000;
@@ -24,8 +27,10 @@ const port = 3000;
 
   //initialize domain events
   const eventEmitter : EventEmitterService= new EventEmitterService();
-  const eventHandler = new customerCreatedDomainEventHandler(eventEmitter.getInstance())
-  eventHandler.customerCreatedDomainEventHandler()
+  const eventHandlerForcustomerCreatedDomainEvent = new customerCreatedDomainEventHandler(eventEmitter.getInstance())
+  eventHandlerForcustomerCreatedDomainEvent.customerCreatedDomainEventHandler()
+  const eventHandlerFororderCreatedDomainEvent = new orderCreatedDomainEventHandler(eventEmitter.getInstance())
+  eventHandlerFororderCreatedDomainEvent.orderCreatedDomainEventHandler()
   
 app.get('/', (req: Request, res: Response)=>{
     res.send('Hello, this is Express + TypeScript');

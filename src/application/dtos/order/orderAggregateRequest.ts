@@ -5,8 +5,6 @@ export class orderAggregateRequest  {
   }
   export class OrderDTO {
     CustomerId: number;
-    TotalAmount: number;
-    Status: number;
     PurchasedDate: Date;
   }
 

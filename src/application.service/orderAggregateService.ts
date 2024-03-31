@@ -7,7 +7,9 @@ import { IProductRepository } from "../infrastructure/repositories/productReposi
 import { ICustomerRepository } from "../infrastructure/repositories/customerRepository";
 import OrderAggregate from "../domain/aggregates/orderAggregate";
 import orderAggregateRequest from "../application/dtos/order/orderAggregateRequest";
-import { OrderDetailResponse } from "../infrastructure/db/models/orderDetail";
+import { SequelizeOrderDetailResponse } from "../infrastructure/db/models/orderDetail";
+import { Order } from "../domain/models/order";
+import { OrderCreatedDomainEvent } from "../domain.events/events/orderCreatedDomainEvent";
 
 export interface IOrderAggregateService {
 
@@ -34,7 +36,7 @@ export class OrderAggregateService implements IOrderAggregateService {
     try {
       const orderAggregateResponseItem = new orderAggregateResponse();
       let orderItem = await this.orderRepository.getById(Id);
-      let orderDetails: OrderDetailResponse[] = await this.OrderDetailRepository.getByOrderId(orderItem.ID);
+      let orderDetails: SequelizeOrderDetailResponse[] = await this.OrderDetailRepository.getByOrderId(orderItem.ID);
       orderAggregateResponseItem.OrderDetails = [];
 
 
@@ -73,8 +75,21 @@ export class OrderAggregateService implements IOrderAggregateService {
 
   createOrderAggreate = async (orderAggregateRequest: orderAggregateRequest): Promise<any> => {
     try {
-      const OrderAggregateItem = new OrderAggregate();
-      let OrderAggregateItemID = await this.orderRepository.create(orderAggregateRequest.Order);
+      let totalAmount = 0;
+      
+      if (Array.isArray(orderAggregateRequest.OrderDetails))
+        for (const orderDetailItem of orderAggregateRequest.OrderDetails) {
+          totalAmount += (await this.ProductRepository.getById(orderDetailItem.ProductId)).Price
+        }
+
+        const orderParam = Order.create({
+          CustomerId: orderAggregateRequest.Order.CustomerId,
+          TotalAmount: totalAmount,
+          Status: 1,
+          PurchasedDate:orderAggregateRequest.Order.PurchasedDate
+        })
+
+      let OrderAggregateItemID = await this.orderRepository.create(orderParam);
 
       if (OrderAggregateItemID > 0)
         orderAggregateRequest.OrderDetails.forEach(async (orderDetailItem: any) => {
@@ -82,11 +97,18 @@ export class OrderAggregateService implements IOrderAggregateService {
           await this.OrderDetailRepository.create(orderDetailItem);
         });
 
+        console.log(`Event for ${orderParam} customer`)
+        const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: OrderAggregateItemID, CustomerId: orderParam.CustomerId };
+  
+        const eventEmitter = this.eventEmitterService.getInstance();
+        eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
+
       return OrderAggregateItemID;
     } catch (ex) {
       throw new Error("Unable to create order");
     }
   };
+  eventEmitterService: any;
 
 
 

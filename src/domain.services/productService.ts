@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../infrastructure/utility/DiTypes";
 import { IProductRepository } from "../infrastructure/repositories/productRepository";
-import { ProductRequest, ProductResponse } from "../infrastructure/db/models/product";
+import { SequelizeProductRequest, SequelizeProductResponse } from "../infrastructure/db/models/product";
 
 export interface IProductService {
 
-  getProductById: (Id: number) => Promise<ProductResponse>;
-  getAllProducts: () => Promise<Array<ProductResponse>>;
-  createProduct: (Product: ProductRequest) => Promise<any>;
-  updateProduct: (Id: number, Product: ProductRequest) => Promise<number>;
+  getProductById: (Id: number) => Promise<SequelizeProductResponse>;
+  getAllProducts: () => Promise<Array<SequelizeProductResponse>>;
+  createProduct: (Product: SequelizeProductRequest) => Promise<any>;
+  updateProduct: (Id: number, Product: SequelizeProductRequest) => Promise<number>;
   deleteProduct: (Id: number) => Promise<boolean>;
 }
 
@@ -19,7 +19,7 @@ export class ProductService implements IProductService {
 
 
 
-  getAllProducts = async (): Promise<Array<ProductResponse>> => {
+  getAllProducts = async (): Promise<Array<SequelizeProductResponse>> => {
     try {
       return this.ProductRepository.getAll();
     } catch {
@@ -27,7 +27,7 @@ export class ProductService implements IProductService {
     }
   };
 
-  getProductById = async (Id: number): Promise<ProductResponse> => {
+  getProductById = async (Id: number): Promise<SequelizeProductResponse> => {
     try {
       return this.ProductRepository.getById(Id);
     } catch {
@@ -35,7 +35,7 @@ export class ProductService implements IProductService {
     }
   };
 
-  createProduct = async (Product: ProductRequest): Promise<any> => {
+  createProduct = async (Product: SequelizeProductRequest): Promise<any> => {
     try {
       return this.ProductRepository.create(Product);
     } catch (ex) {
@@ -43,7 +43,7 @@ export class ProductService implements IProductService {
     }
   };
 
-  updateProduct = async (Id: number, Product: ProductRequest): Promise<number> => {
+  updateProduct = async (Id: number, Product: SequelizeProductRequest): Promise<number> => {
     try {
       return this.ProductRepository.update(Id, Product);
     } catch {

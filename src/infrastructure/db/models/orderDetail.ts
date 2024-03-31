@@ -7,10 +7,10 @@ export interface ISequelizeOrderDetail {
     Count: number;
 }
 
-export interface OrderDetailRequest extends Optional<ISequelizeOrderDetail, 'ID'> {}
-export interface OrderDetailResponse extends Required<ISequelizeOrderDetail> {}
+export interface SequelizeOrderDetailRequest extends Optional<ISequelizeOrderDetail, 'ID'> {}
+export interface SequelizeOrderDetailResponse extends Required<ISequelizeOrderDetail> {}
 
-class SequelizeOrderDetail extends Model<ISequelizeOrderDetail,OrderDetailRequest> implements ISequelizeOrderDetail {
+class SequelizeOrderDetail extends Model<ISequelizeOrderDetail,SequelizeOrderDetailRequest> implements ISequelizeOrderDetail {
     public ID!: number
     public OrderId!: number
     public ProductId!: number

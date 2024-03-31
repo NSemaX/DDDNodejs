@@ -874,14 +874,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "TotalAmount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "Status": {
-            "type": "integer",
-            "format": "int32"
-          },
           "PurchasedDate": {
             "type": "string",
             "format": "date-time"

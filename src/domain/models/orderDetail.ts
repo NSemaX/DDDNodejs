@@ -6,7 +6,8 @@ export interface IOrderDetail {
     Count: number;
 }
 
-class OrderDetail extends Entity<IOrderDetail> {
+export class OrderDetail extends Entity<IOrderDetail> {
+  
     private  _OrderId!: number
     private  _ProductId!: number
     private  _Count!: number

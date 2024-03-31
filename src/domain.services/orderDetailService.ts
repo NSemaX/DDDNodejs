@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../infrastructure/utility/DiTypes";
 import { IOrderDetailRepository } from "../infrastructure/repositories/orderDetailRepository";
-import { OrderDetailRequest, OrderDetailResponse } from "../infrastructure/db/models/orderDetail";
+import { SequelizeOrderDetailRequest, SequelizeOrderDetailResponse } from "../infrastructure/db/models/orderDetail";
 
 export interface IOrderDetailService {
 
-  getOrderDetailById: (Id: number) => Promise<OrderDetailResponse>;
-  getAllOrderDetails: () => Promise<Array<OrderDetailResponse>>;
-  createOrderDetail: (OrderDetail: OrderDetailRequest) => Promise<any>;
-  updateOrderDetail: (Id: number, OrderDetail: OrderDetailRequest) => Promise<number>;
+  getOrderDetailById: (Id: number) => Promise<SequelizeOrderDetailResponse>;
+  getAllOrderDetails: () => Promise<Array<SequelizeOrderDetailResponse>>;
+  createOrderDetail: (OrderDetail: SequelizeOrderDetailRequest) => Promise<any>;
+  updateOrderDetail: (Id: number, OrderDetail: SequelizeOrderDetailRequest) => Promise<number>;
   deleteOrderDetail: (Id: number) => Promise<boolean>;
 }
 
@@ -19,7 +19,7 @@ export class OrderDetailService implements IOrderDetailService {
 
 
 
-  getAllOrderDetails = async (): Promise<Array<OrderDetailResponse>> => {
+  getAllOrderDetails = async (): Promise<Array<SequelizeOrderDetailResponse>> => {
     try {
       return this.OrderDetailRepository.getAll();
     } catch {
@@ -27,7 +27,7 @@ export class OrderDetailService implements IOrderDetailService {
     }
   };
 
-  getOrderDetailById = async (Id: number): Promise<OrderDetailResponse> => {
+  getOrderDetailById = async (Id: number): Promise<SequelizeOrderDetailResponse> => {
     try {
       return this.OrderDetailRepository.getById(Id);
     } catch {
@@ -35,7 +35,7 @@ export class OrderDetailService implements IOrderDetailService {
     }
   };
 
-  createOrderDetail = async (OrderDetail: OrderDetailRequest): Promise<any> => {
+  createOrderDetail = async (OrderDetail: SequelizeOrderDetailRequest): Promise<any> => {
     try {
       return this.OrderDetailRepository.create(OrderDetail);
     } catch (ex) {
@@ -43,7 +43,7 @@ export class OrderDetailService implements IOrderDetailService {
     }
   };
 
-  updateOrderDetail = async (Id: number, OrderDetail: OrderDetailRequest): Promise<number> => {
+  updateOrderDetail = async (Id: number, OrderDetail: SequelizeOrderDetailRequest): Promise<number> => {
     try {
       return this.OrderDetailRepository.update(Id, OrderDetail);
     } catch {

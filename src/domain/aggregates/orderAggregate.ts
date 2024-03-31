@@ -1,10 +1,10 @@
-import { OrderRequest } from "../../infrastructure/db/models/order";
-import { OrderDetailRequest } from "../../infrastructure/db/models/orderDetail";
+import { SequelizeOrderRequest } from "../../infrastructure/db/models/order";
+import { SequelizeOrderDetailRequest } from "../../infrastructure/db/models/orderDetail";
 import { IAggregateRoot } from "../seedwork/IAggregateRoot";
 
 
 export class OrderAggregate implements IAggregateRoot {
-    Order: OrderRequest;
-    OrderDetails:Array<OrderDetailRequest>;
+    Order: SequelizeOrderRequest;
+    OrderDetails:Array<SequelizeOrderDetailRequest>;
   }
   export default OrderAggregate
