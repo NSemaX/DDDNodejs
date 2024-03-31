@@ -72,6 +72,6 @@ export class Customer extends Entity<ICustomer> {
       }
     
       public static create(props: ICustomer, id?: number) {
-        return new Customer(props, id);
+        return new Customer(props, id)
       }
 }
