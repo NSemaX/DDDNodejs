@@ -863,10 +863,6 @@
           },
           "Address": {
             "$ref": "#/components/schemas/Address"
-          },
-          "Status": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
