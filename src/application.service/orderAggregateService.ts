@@ -10,6 +10,7 @@ import orderAggregateRequest from "../application/dtos/order/orderAggregateReque
 import { SequelizeOrderDetailResponse } from "../infrastructure/db/models/orderDetail";
 import { Order } from "../domain/models/order";
 import { OrderCreatedDomainEvent } from "../domain.events/events/orderCreatedDomainEvent";
+import { EventEmitterService } from "../infrastructure/utility/EventEmitterService";
 
 export interface IOrderAggregateService {
 
@@ -31,6 +32,9 @@ export class OrderAggregateService implements IOrderAggregateService {
 
   @inject(Types.CUSTOMER_REPOSITORY)
   private CustomerRepository: ICustomerRepository;
+
+  @inject(Types.EVENT_EMITTER_SERVICE)
+  private eventEmitterService: EventEmitterService;
 
   getOrderAggreateById = async (Id: number): Promise<orderAggregateResponse> => {
     try {
@@ -108,9 +112,6 @@ export class OrderAggregateService implements IOrderAggregateService {
       throw new Error("Unable to create order");
     }
   };
-  eventEmitterService: any;
-
-
 
 }
 
