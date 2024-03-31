@@ -14,7 +14,7 @@ export class orderCreatedDomainEventHandler{
 
         this.eventEmitter.on('orderCreated', (orderCreatedDomainEvent) => {
             try{
-                this.sendEmail(orderCreatedDomainEvent);
+                this.orderReadytoShipping(orderCreatedDomainEvent);
             }
             catch(error){
                 console.log('An error occured while perform Route accessed actions')
@@ -22,8 +22,9 @@ export class orderCreatedDomainEventHandler{
         });
     }
 
-    private sendEmail( orderCreatedDomainEvent: OrderCreatedDomainEvent){
-        console.log(`An email sent to the ${orderCreatedDomainEvent.CustomerId} email address.`)
+    private orderReadytoShipping( orderCreatedDomainEvent: OrderCreatedDomainEvent){
+        //An integration event can be fired up here for shipping API.
+        console.log(`${orderCreatedDomainEvent.OrderId} order belong to the ${orderCreatedDomainEvent.CustomerId} customer is ready to shipping.`)
     }
 
 }
