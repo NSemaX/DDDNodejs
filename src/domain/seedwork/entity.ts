@@ -1,3 +1,6 @@
+export interface IEntity {
+  ID?: number;
+}
 export abstract class Entity<TInitProps>
  {
     public readonly ID: number;

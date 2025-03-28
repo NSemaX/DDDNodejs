@@ -1,44 +1,41 @@
 import { Container } from "inversify";
 import { Types } from "./infrastructure/utility/DiTypes";
-import { IOrderRepository,OrderRepository,} from "./infrastructure/repositories/orderRepository";
-import { IOrderService, OrderService } from "./domain.services/orderService";
-import { IOrderController,OrderController,} from "./application/controllers/orderController";
 
-import { IProductRepository, ProductRepository } from "./infrastructure/repositories/productRepository";
-import { IProductService, ProductService } from "./domain.services/productService";
-import { IProductController,ProductController,} from "./application/controllers/productController";
-
-import { IOrderDetailRepository, OrderDetailRepository } from "./infrastructure/repositories/orderDetailRepository";
-import { IOrderDetailService, OrderDetailService } from "./domain.services/orderDetailService";
-import { IOrderDetailController,OrderDetailController,} from "./application/controllers/orderDetailController";
-
-import { ICustomerRepository, CustomerRepository } from "./infrastructure/repositories/customerRepository";
-import { ICustomerService, CustomerService } from "./domain.services/customerService";
-import { ICustomerController,CustomerController,} from "./application/controllers/customerController";
-import { IOrderAggregateService, OrderAggregateService } from "./application.service/orderAggregateService";
-import { EventEmitter } from "events";
 import { EventEmitterService } from "./infrastructure/utility/EventEmitterService";
+import { IOrderRepository } from "./domain/aggregates/order/IOrderRepository";
+import { IOrderController, OrderController } from "./web.api/controllers/orderController";
+import { IOrderDomainService, OrderDomainService } from "./domain/domain.services/orderDomainService";
+import { IOrderApplicationService, OrderApplicationService } from "./application/application.service/orderApplicationService";
+import { IProductController, ProductController } from "./web.api/controllers/productController";
+import { IProductApplicationService, ProductApplicationService } from "./application/application.service/productApplicationService";
+import { IOrderDetailRepository } from "./domain/aggregates/order/IOrderDetailRepository";
+import { ICustomerRepository } from "./domain/models/customer/ICustomerRepository";
+import { CustomerApplicationService, ICustomerApplicationService } from "./application/application.service/customerApplicationService";
+import { CustomerController, ICustomerController } from "./web.api/controllers/customerController";
+import { OrderRepository } from "./infrastructure/repositories/orderRepository";
+import { OrderDetailRepository } from "./infrastructure/repositories/orderDetailRepository";
+import { CustomerRepository } from "./infrastructure/repositories/customerRepository";
+import { ProductRepository } from "./infrastructure/repositories/productRepository";
+import { IProductRepository } from "./domain/models/product/IProductRepository";
 
 const dIContainer = new Container();
 
+
 dIContainer.bind<IOrderRepository>(Types.ORDER_REPOSITORY).to(OrderRepository);
-dIContainer.bind<IOrderService>(Types.ORDER_SERVICE).to(OrderService);
 dIContainer.bind<IOrderController>(Types.ORDER_CONTROLLER).to(OrderController);
+dIContainer.bind<IOrderDomainService>(Types.ORDER_DOMAIN_SERVICE).to(OrderDomainService);
+dIContainer.bind<IOrderApplicationService>(Types.ORDER_APPLICATION_SERVICE).to(OrderApplicationService);
 
 dIContainer.bind<IProductRepository>(Types.PRODUCT_REPOSITORY).to(ProductRepository);
-dIContainer.bind<IProductService>(Types.PRODUCT_SERVICE).to(ProductService);
+dIContainer.bind<IProductApplicationService>(Types.PRODUCT_APPLICATION_SERVICE).to(ProductApplicationService);
 dIContainer.bind<IProductController>(Types.PRODUCT_CONTROLLER).to(ProductController);
 
 dIContainer.bind<IOrderDetailRepository>(Types.ORDER_DETAIL_REPOSITORY).to(OrderDetailRepository);
-dIContainer.bind<IOrderDetailService>(Types.ORDER_DETAIL_SERVICE).to(OrderDetailService);
-dIContainer.bind<IOrderDetailController>(Types.ORDER_DETAIL_CONTROLLER).to(OrderDetailController);
 
 
 dIContainer.bind<ICustomerRepository>(Types.CUSTOMER_REPOSITORY).to(CustomerRepository);
-dIContainer.bind<ICustomerService>(Types.CUSTOMER_SERVICE).to(CustomerService);
+dIContainer.bind<ICustomerApplicationService>(Types.CUSTOMER_APPLICATION_SERVICE).to(CustomerApplicationService);
 dIContainer.bind<ICustomerController>(Types.CUSTOMER_CONTROLLER).to(CustomerController);
-
-dIContainer.bind<IOrderAggregateService>(Types.ORDER_AGGREGATE_SERVICE).to(OrderAggregateService);
 
 dIContainer.bind<EventEmitterService>(Types.EVENT_EMITTER_SERVICE).to(EventEmitterService);
 

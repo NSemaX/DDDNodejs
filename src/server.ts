@@ -1,13 +1,13 @@
 import express, {Express, Request, Response,Application} from 'express';
 import SequelizeConnection from './infrastructure/db/SequelizeConnection'
-import { db } from "./infrastructure/db/models/index";
+import { db } from "./infrastructure/db/dbModels/index";
 import "reflect-metadata";
-import { applicationRoutes } from './application/routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerOutput from "./swagger.json";
-import { customerCreatedDomainEventHandler } from './domain.events/handlers/customerCreatedEventHandler';
+import { customerCreatedDomainEventHandler } from './domain/domain.events/handlers/customerCreatedEventHandler';
 import { EventEmitterService } from './infrastructure/utility/EventEmitterService';
-import { orderCreatedDomainEventHandler } from './domain.events/handlers/orderCreatedEventHandler';
+import { orderCreatedDomainEventHandler } from './domain/domain.events/handlers/orderCreatedEventHandler';
+import { applicationRoutes } from './web.api/routes';
 
 
 

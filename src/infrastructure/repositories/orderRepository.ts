@@ -1,25 +1,18 @@
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
-import SequelizeOrder, { SequelizeOrderRequest, SequelizeOrderResponse } from '../db/models/order';
-import { Order, IOrder } from '../../domain/models/order';
-
-export interface IOrderRepository {
-    getAll: () => Promise<Array<SequelizeOrderResponse>>;
-    getById: (id: number) => Promise<SequelizeOrderResponse>;
-    create: (order: IOrder) => Promise<any>;
-    update: (id: number, order: Partial<SequelizeOrderRequest>) => Promise<number>;
-    delete: (id: any) => Promise<boolean>;
-}
+import {  IOrder } from '../../domain/aggregates/order/order';
+import { IOrderRepository } from "../../domain/aggregates/order/IOrderRepository";
+import { SequelizeOrder } from "../db/dbModels";
 
 
 @injectable()
 export class OrderRepository implements IOrderRepository {
 
-    getAll = async (): Promise<Array<SequelizeOrderResponse>> => {
+    getAll = async (): Promise<Array<IOrder>> => {
         return SequelizeOrder.findAll()
     }
 
-    getById = async (id: number): Promise<SequelizeOrderResponse> => {
+    getById = async (id: number): Promise<IOrder> => {
         const item = await SequelizeOrder.findByPk(id)
 
         if (!item) {
@@ -29,9 +22,24 @@ export class OrderRepository implements IOrderRepository {
         return item
     }
 
+    getByCustomerId = async (customerId: number): Promise<Array<IOrder>> => {
+
+        const customerOrders = await SequelizeOrder.findAll({
+          where: {
+            CustomerId: customerId,
+          },
+        });
+
+      if (!customerOrders) {
+          throw new Error('not found')
+      }
+
+      return customerOrders
+  }
+
     create = async (payload: IOrder): Promise<any> => {
 
-        const order: SequelizeOrderRequest = 
+        const order: IOrder = 
         { 
             CustomerId:payload.CustomerId,
             TotalAmount:payload.TotalAmount,
@@ -43,7 +51,7 @@ export class OrderRepository implements IOrderRepository {
     }
 
 
-    update = async (ID: number, payload: Partial<SequelizeOrderRequest>): Promise<number> => {
+    update = async (ID: number, payload: Partial<IOrder>): Promise<number> => {
         const item = await SequelizeOrder.findByPk(ID)
 
         if (!item) {
