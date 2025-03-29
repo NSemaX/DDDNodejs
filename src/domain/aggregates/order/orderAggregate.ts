@@ -1,8 +1,7 @@
-import { inject } from "inversify";
 import { IAggregateRoot } from "../../seedwork/IAggregateRoot";
 import { IOrder } from "./order";
 import { IOrderDetail } from "./orderDetail";
-import { Types } from "../../../infrastructure/utility/DiTypes";
+
 
   export interface IOrderAggregate extends IAggregateRoot {
     Order: IOrder;
@@ -10,13 +9,9 @@ import { Types } from "../../../infrastructure/utility/DiTypes";
   }
 
   export class OrderAggregate {
-  
-    @inject(Types.PRODUCT_REPOSITORY)
       private  _Order!: IOrder
       private  _OrderDetails!: Array<IOrderDetail>
 
-
-  
       constructor({ Order, OrderDetails }: IOrderAggregate, id?: number) {
           this._Order = Order;
           this._OrderDetails = OrderDetails;
