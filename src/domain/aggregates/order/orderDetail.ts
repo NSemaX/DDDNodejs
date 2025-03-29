@@ -1,7 +1,7 @@
 import { Entity, IEntity } from "../../seedwork/entity";
 
 export interface IOrderDetail extends IEntity {
-    OrderId: number;
+    OrderId?: number;
     ProductId: number;
     Count: number;
 }
@@ -14,7 +14,7 @@ export class OrderDetail extends Entity<IOrderDetail> {
 
     constructor({ OrderId, ProductId, Count }: IOrderDetail, id?: number) {
         super(id);
-        this._OrderId = OrderId;
+        this._OrderId = OrderId!;
         this._ProductId = ProductId;
         this._Count = Count;
       }
@@ -34,6 +34,10 @@ export class OrderDetail extends Entity<IOrderDetail> {
         }
         return this._Count;
       }
+
+      /*getTotalPrice(): number {
+        return this.product.getDetails().price * this._Count;
+      }*/
     
       public static create(props: IOrderDetail, id?: number) {
         return new OrderDetail(props, id);

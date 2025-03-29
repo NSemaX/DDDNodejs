@@ -1,19 +1,20 @@
 import { inject, injectable } from "inversify";
 import OrderResponse, { OrderDetailResponseDTO, OrderItemResponse, OrderResponseDTO } from "../dtos/order/orderResponse";
-import OrderCreateRequest from "../dtos/order/orderCreateRequest";
+import OrderCreateRequest, { OrderCreateRequestDetailDTO } from "../dtos/order/orderCreateRequest";
 import OrderUpdateRequest from "../dtos/order/orderUpdateRequest";
 import { IOrderDomainService } from "../../domain/domain.services/orderDomainService";
 import { IOrderRepository } from "../../domain/aggregates/order/IOrderRepository";
 import { IOrderDetailRepository } from "../../domain/aggregates/order/IOrderDetailRepository";
 import { Types } from "../../infrastructure/utility/DiTypes";
 import { ICustomerRepository } from "../../domain/models/customer/ICustomerRepository";
-import { IOrderDetail } from "../../domain/aggregates/order/orderDetail";
+import { IOrderDetail, OrderDetail } from "../../domain/aggregates/order/orderDetail";
 import { IOrder } from "../../domain/aggregates/order/order";
 import { IProductRepository } from "../../domain/models/product/IProductRepository";
 import { OrderStatus } from "../../domain/aggregates/order/orderStatus";
 import { CustomerResponse } from "../dtos/customer/customerResponse";
 import { EventEmitterService } from "../../infrastructure/utility/EventEmitterService";
 import { OrderCreatedDomainEvent } from "../../domain/domain.events/events/orderCreatedDomainEvent";
+import { IOrderAggregate, OrderAggregate } from "../../domain/aggregates/order/orderAggregate";
 
 
 
@@ -85,40 +86,25 @@ export class OrderApplicationService implements IOrderApplicationService {
 
   createOrder = async (orderCreateRequest: OrderCreateRequest): Promise<any> => {
     try {
-      let  OrderDetails: IOrderDetail[] =new Array<IOrderDetail>;
-      for (const orderDetailItem of orderCreateRequest.OrderDetails) {
-        let OrderDetailItem: IOrderDetail = { OrderId: 0, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
-        OrderDetails.push(OrderDetailItem);
-      }
-      let isReachedMaxProductInADay = await this.orderDomainService.isOrderReachedtheMaxProductCountInADay(orderCreateRequest.Order.CustomerId,OrderDetails);
+      const orderAggregate: IOrderAggregate =
+          {
+            Order: {
+              CustomerId: orderCreateRequest.Order.CustomerId,
+              TotalAmount: 0,
+              Status: 0,
+              PurchasedDate: orderCreateRequest.Order.PurchasedDate
+            },
+            OrderDetails: orderCreateRequest.OrderDetails,
+          };
 
-      if (!isReachedMaxProductInADay) {
-        let TotalAmount = 0;
-        let OrderItem: IOrder = { CustomerId: orderCreateRequest.Order.CustomerId, TotalAmount:TotalAmount, Status: OrderStatus.Created, PurchasedDate: orderCreateRequest.Order.PurchasedDate };
-        let OrderAggregateItemID = await this.orderRepository.create(OrderItem);
-        if (OrderAggregateItemID > 0)
+      const createdOrderItem= await OrderAggregate.create(orderAggregate);
 
-          for (const orderDetailItem of orderCreateRequest.OrderDetails) {
-            let OrderDetailItem: IOrderDetail = { OrderId: OrderAggregateItemID, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
-            let productItem= await this.ProductRepository.getById(orderDetailItem.ProductId);
-            if (productItem!=null) {
-            TotalAmount += productItem.Price * orderDetailItem.Count;
-            }
-            await this.OrderDetailRepository.create(OrderDetailItem);
-          }
+      console.log(`Event for ${createdOrderItem} customer`)
+      const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: createdOrderItem.Order.ID, CustomerId: createdOrderItem.Order.CustomerId };
 
-        OrderItem.TotalAmount = TotalAmount;
-        await this.orderRepository.update(OrderAggregateItemID, OrderItem);
+      const eventEmitter = this.eventEmitterService.getInstance();
+      eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
 
-        console.log(`Event for ${OrderItem} customer`)
-        const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: OrderAggregateItemID, CustomerId: OrderItem.CustomerId };
-  
-        const eventEmitter = this.eventEmitterService.getInstance();
-        eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
-
-        return OrderAggregateItemID;
-      }
-      throw new Error("Unable to create order, reached to max product count in a day.");
     } catch (ex) {
       throw new Error("Unable to create order");
     }
@@ -174,7 +160,7 @@ export class OrderApplicationService implements IOrderApplicationService {
         OrderDetailDTOItem.ID = orderDetailItem.ID!;
         OrderDetailDTOItem.Product = await this.ProductRepository.getById(orderDetailItem.ProductId);
         OrderDetailDTOItem.Count = orderDetailItem.Count;
-        OrderDetailDTOItem.OrderId = orderDetailItem.OrderId;
+        OrderDetailDTOItem.OrderId = orderDetailItem.OrderId!;
         OrderDetailDTOItems.push(OrderDetailDTOItem);
       }
 
