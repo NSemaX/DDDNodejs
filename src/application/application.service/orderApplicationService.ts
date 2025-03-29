@@ -175,6 +175,7 @@ export class OrderApplicationService implements IOrderApplicationService {
       Address: { StreetAddress: customerDB.Address.StreetAddress, City: customerDB.Address.City, State: customerDB.Address.State, Zip: customerDB.Address.Zip },
     };
     OrderDTOItem.Customer = customerResp;
+    OrderDTOItem.TotalAmount=order.TotalAmount;
     OrderDTOItem.Status = order.Status
     OrderDTOItem.PurchasedDate = order.PurchasedDate;
 

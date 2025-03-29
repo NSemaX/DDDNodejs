@@ -3,7 +3,7 @@ export const vars = {
     dbHost: process.env.DB_HOST || 'localhost',
     dbService: process.env.DB_SERVICE || 'expressapp',
     dbUserName: process.env.DB_USERNAME || 'root',
-    dbPassword: process.env.DB_PASSWORD || 'admin12345',
+    dbPassword: process.env.DB_PASSWORD || '12345678',
     dbPort: Number(process.env.DB_PORT) || 3306,
     dbSync: process.env.DB_SYNC == 'true',
     dbName: process.env.DB_SERVICE || 'nsshop_ddd',

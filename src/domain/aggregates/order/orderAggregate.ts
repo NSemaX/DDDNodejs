@@ -3,9 +3,6 @@ import { IAggregateRoot } from "../../seedwork/IAggregateRoot";
 import { IOrder } from "./order";
 import { IOrderDetail } from "./orderDetail";
 import { Types } from "../../../infrastructure/utility/DiTypes";
-import { IProductRepository } from "../../models/product/IProductRepository";
-
-
 
   export interface IOrderAggregate extends IAggregateRoot {
     Order: IOrder;
@@ -15,8 +12,6 @@ import { IProductRepository } from "../../models/product/IProductRepository";
   export class OrderAggregate {
   
     @inject(Types.PRODUCT_REPOSITORY)
-    private static ProductRepository: IProductRepository;
-    
       private  _Order!: IOrder
       private  _OrderDetails!: Array<IOrderDetail>
 
@@ -41,11 +36,6 @@ import { IProductRepository } from "../../models/product/IProductRepository";
       
         public static async create(props: IOrderAggregate, id?: number) {          
           const orderAggregate = new OrderAggregate(props, id);
-           //validate products
-          for (const orderDetailItem of orderAggregate.OrderDetails) {
-            if(this.ProductRepository.getById(orderDetailItem.ProductId)==null)
-              throw new Error("The product in the order is not available");
-          }
           return orderAggregate;
         }
   }
