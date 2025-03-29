@@ -86,7 +86,7 @@ export class OrderApplicationService implements IOrderApplicationService {
 
   createOrder = async (orderCreateRequest: OrderCreateRequest): Promise<any> => {
     try {
-      const orderAggregate: IOrderAggregate =
+      const orderAggregateItem: IOrderAggregate =
           {
             Order: {
               CustomerId: orderCreateRequest.Order.CustomerId,
@@ -97,14 +97,47 @@ export class OrderApplicationService implements IOrderApplicationService {
             OrderDetails: orderCreateRequest.OrderDetails,
           };
 
-      const createdOrderItem= await OrderAggregate.create(orderAggregate);
+      const orderAggregate= await OrderAggregate.create(orderAggregateItem);
 
-      console.log(`Event for ${createdOrderItem} customer`)
-      const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: createdOrderItem.Order.ID, CustomerId: createdOrderItem.Order.CustomerId };
+    
+
+      
+      let  OrderDetails: IOrderDetail[] =new Array<IOrderDetail>;
+      for (const orderDetailItem of orderAggregate.OrderDetails) {
+        let OrderDetailItem: IOrderDetail = { OrderId: 0, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
+        OrderDetails.push(OrderDetailItem);
+      }
+      let isReachedMaxProductInADay = await this.orderDomainService.isOrderReachedtheMaxProductCountInADay(orderAggregate.Order.CustomerId,OrderDetails);
+
+      if (!isReachedMaxProductInADay) {
+        let TotalAmount = 0;
+        let OrderItem: IOrder = { CustomerId: orderAggregate.Order.CustomerId, TotalAmount:TotalAmount, Status: OrderStatus.Created, PurchasedDate: orderAggregate.Order.PurchasedDate };
+        let OrderAggregateItemID = await this.orderRepository.create(OrderItem);
+
+        if (OrderAggregateItemID > 0)
+
+          for (const orderDetailItem of orderAggregate.OrderDetails) {
+            let OrderDetailItem: IOrderDetail = { OrderId: OrderAggregateItemID, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
+            let productItem= await this.ProductRepository.getById(orderDetailItem.ProductId);
+            if (productItem!=null) {
+            TotalAmount += productItem.Price * orderDetailItem.Count;
+            }
+            await this.OrderDetailRepository.create(OrderDetailItem);
+          }
+
+        OrderItem.TotalAmount = TotalAmount;
+        await this.orderRepository.update(OrderAggregateItemID, OrderItem);
+          
+
+      console.log(`Event for ${orderAggregate} orderAggregate`)
+      const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: orderAggregate.Order.ID, CustomerId: orderAggregate.Order.CustomerId };
 
       const eventEmitter = this.eventEmitterService.getInstance();
       eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
 
+      return OrderAggregateItemID;
+    }
+    throw new Error("Unable to create order, reached to max product count in a day.");  
     } catch (ex) {
       throw new Error("Unable to create order");
     }
