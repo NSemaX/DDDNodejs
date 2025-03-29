@@ -1,13 +1,10 @@
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
 import { IAggregateRoot } from "../../seedwork/IAggregateRoot";
-import { IOrder, Order } from "./order";
-import { IOrderDetail, OrderDetail } from "./orderDetail";
+import { IOrder } from "./order";
+import { IOrderDetail } from "./orderDetail";
 import { Types } from "../../../infrastructure/utility/DiTypes";
-import { IOrderDomainService } from "../../domain.services/orderDomainService";
-import { IOrderRepository } from "./IOrderRepository";
-import { IOrderDetailRepository } from "./IOrderDetailRepository";
 import { IProductRepository } from "../../models/product/IProductRepository";
-import { OrderStatus } from "./orderStatus";
+
 
 
   export interface IOrderAggregate extends IAggregateRoot {
@@ -16,15 +13,6 @@ import { OrderStatus } from "./orderStatus";
   }
 
   export class OrderAggregate {
-
-    @inject(Types.ORDER_DOMAIN_SERVICE)
-    private static orderDomainService: IOrderDomainService;
-  
-    @inject(Types.ORDER_REPOSITORY)
-    private static orderRepository: IOrderRepository;
-  
-    @inject(Types.ORDER_DETAIL_REPOSITORY)
-    private static OrderDetailRepository: IOrderDetailRepository;
   
     @inject(Types.PRODUCT_REPOSITORY)
     private static ProductRepository: IProductRepository;
@@ -53,6 +41,11 @@ import { OrderStatus } from "./orderStatus";
       
         public static async create(props: IOrderAggregate, id?: number) {          
           const orderAggregate = new OrderAggregate(props, id);
+           //validate products
+          for (const orderDetailItem of orderAggregate.OrderDetails) {
+            if(this.ProductRepository.getById(orderDetailItem.ProductId)==null)
+              throw new Error("The product in the order is not available");
+          }
           return orderAggregate;
         }
   }

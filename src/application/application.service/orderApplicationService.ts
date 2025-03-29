@@ -44,9 +44,9 @@ export class OrderApplicationService implements IOrderApplicationService {
 
   @inject(Types.CUSTOMER_REPOSITORY)
   private CustomerRepository: ICustomerRepository;
-  
+
   @inject(Types.EVENT_EMITTER_SERVICE)
-    private eventEmitterService: EventEmitterService;
+  private eventEmitterService: EventEmitterService;
 
 
   getAllOrders = async (): Promise<Array<OrderItemResponse>> => {
@@ -86,58 +86,51 @@ export class OrderApplicationService implements IOrderApplicationService {
 
   createOrder = async (orderCreateRequest: OrderCreateRequest): Promise<any> => {
     try {
+      //mapping
       const orderAggregateItem: IOrderAggregate =
-          {
-            Order: {
-              CustomerId: orderCreateRequest.Order.CustomerId,
-              TotalAmount: 0,
-              Status: 0,
-              PurchasedDate: orderCreateRequest.Order.PurchasedDate
-            },
-            OrderDetails: orderCreateRequest.OrderDetails,
-          };
+      {
+        Order: {
+          CustomerId: orderCreateRequest.Order.CustomerId,
+          TotalAmount: 0,
+          Status: 0,
+          PurchasedDate: orderCreateRequest.Order.PurchasedDate
+        },
+        OrderDetails: orderCreateRequest.OrderDetails,
+      };
+      //execute domain rules
+      const orderAggregate = await OrderAggregate.create(orderAggregateItem);
 
-      const orderAggregate= await OrderAggregate.create(orderAggregateItem);
-
-    
-
-      
-      let  OrderDetails: IOrderDetail[] =new Array<IOrderDetail>;
+     //execute application rules
+     //orderDetail Mapping
+      let OrderDetails: IOrderDetail[] = new Array<IOrderDetail>;
       for (const orderDetailItem of orderAggregate.OrderDetails) {
-        let OrderDetailItem: IOrderDetail = { OrderId: 0, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
+        let OrderDetailItem: IOrderDetail = { OrderId: 0, Count: orderDetailItem.Count, ProductId: orderDetailItem.ProductId };
         OrderDetails.push(OrderDetailItem);
       }
-      let isReachedMaxProductInADay = await this.orderDomainService.isOrderReachedtheMaxProductCountInADay(orderAggregate.Order.CustomerId,OrderDetails);
+      let isReachedMaxProductInADay = await this.orderDomainService.isOrderReachedtheMaxProductCountInADay(orderAggregate.Order.CustomerId, OrderDetails);
 
       if (!isReachedMaxProductInADay) {
-        let TotalAmount = 0;
-        let OrderItem: IOrder = { CustomerId: orderAggregate.Order.CustomerId, TotalAmount:TotalAmount, Status: OrderStatus.Created, PurchasedDate: orderAggregate.Order.PurchasedDate };
+        //create orderItem
+        let TotalAmount = orderAggregate.calculateTotal();
+        let OrderItem: IOrder = { CustomerId: orderAggregate.Order.CustomerId, TotalAmount: TotalAmount, Status: OrderStatus.Created, PurchasedDate: orderAggregate.Order.PurchasedDate };
         let OrderAggregateItemID = await this.orderRepository.create(OrderItem);
 
         if (OrderAggregateItemID > 0)
-
           for (const orderDetailItem of orderAggregate.OrderDetails) {
-            let OrderDetailItem: IOrderDetail = { OrderId: OrderAggregateItemID, Count:orderDetailItem.Count, ProductId:orderDetailItem.ProductId };
-            let productItem= await this.ProductRepository.getById(orderDetailItem.ProductId);
-            if (productItem!=null) {
-            TotalAmount += productItem.Price * orderDetailItem.Count;
-            }
+            let OrderDetailItem: IOrderDetail = { OrderId: OrderAggregateItemID, Count: orderDetailItem.Count, ProductId: orderDetailItem.ProductId };
+        //create orderDetailItems 
             await this.OrderDetailRepository.create(OrderDetailItem);
           }
+        //fire domain events
+        console.log(`Event for ${orderAggregate} orderAggregate`)
+        const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: orderAggregate.Order.ID, CustomerId: orderAggregate.Order.CustomerId };
 
-        OrderItem.TotalAmount = TotalAmount;
-        await this.orderRepository.update(OrderAggregateItemID, OrderItem);
-          
+        const eventEmitter = this.eventEmitterService.getInstance();
+        eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
 
-      console.log(`Event for ${orderAggregate} orderAggregate`)
-      const orderCreatedDomainEvent: OrderCreatedDomainEvent = { OrderId: orderAggregate.Order.ID, CustomerId: orderAggregate.Order.CustomerId };
-
-      const eventEmitter = this.eventEmitterService.getInstance();
-      eventEmitter.emit('orderCreated', orderCreatedDomainEvent);
-
-      return OrderAggregateItemID;
-    }
-    throw new Error("Unable to create order, reached to max product count in a day.");  
+        return OrderAggregateItemID;
+      }
+      throw new Error("Unable to create order, reached to max product count in a day.");
     } catch (ex) {
       throw new Error("Unable to create order");
     }
@@ -171,17 +164,17 @@ export class OrderApplicationService implements IOrderApplicationService {
     let OrderDTOItem = new OrderResponseDTO();
 
     OrderDTOItem.ID = order.ID!;
-          const customerDB = await this.CustomerRepository.getById(order.CustomerId);
-          const customerResp: CustomerResponse =
-          {
-            ID: customerDB.ID!,
-            Name: customerDB.Name,
-            Surname: customerDB.Surname,
-            Email: customerDB.Email,
-            Status: customerDB.Status,
-            Address: { StreetAddress: customerDB.Address.StreetAddress, City: customerDB.Address.City, State: customerDB.Address.State, Zip: customerDB.Address.Zip },
-          };
-    OrderDTOItem.Customer =customerResp; 
+    const customerDB = await this.CustomerRepository.getById(order.CustomerId);
+    const customerResp: CustomerResponse =
+    {
+      ID: customerDB.ID!,
+      Name: customerDB.Name,
+      Surname: customerDB.Surname,
+      Email: customerDB.Email,
+      Status: customerDB.Status,
+      Address: { StreetAddress: customerDB.Address.StreetAddress, City: customerDB.Address.City, State: customerDB.Address.State, Zip: customerDB.Address.Zip },
+    };
+    OrderDTOItem.Customer = customerResp;
     OrderDTOItem.Status = order.Status
     OrderDTOItem.PurchasedDate = order.PurchasedDate;
 
