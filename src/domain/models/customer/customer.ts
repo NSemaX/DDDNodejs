@@ -12,7 +12,7 @@ export interface ICustomer extends IEntity {
 
 export class Customer extends Entity<ICustomer> {
 
-    private static EMAIL_REGEX = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i
+    private static EMAIL_REGEX  = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     private static MIN_PASSWORD_LENGTH = 4;
     private _Name!: string;
     private _Surname!: string;

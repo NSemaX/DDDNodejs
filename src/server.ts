@@ -3,11 +3,11 @@ import SequelizeConnection from './infrastructure/db/SequelizeConnection'
 import { db } from "./infrastructure/db/dbModels/index";
 import "reflect-metadata";
 import swaggerUi from "swagger-ui-express";
-import swaggerOutput from "./swagger.json";
+import swaggerOutput from "./presentation/web.api/swagger.json";
 import { customerCreatedDomainEventHandler } from './domain/domain.events/handlers/customerCreatedEventHandler';
 import { EventEmitterService } from './infrastructure/utility/EventEmitterService';
 import { orderCreatedDomainEventHandler } from './domain/domain.events/handlers/orderCreatedEventHandler';
-import { applicationRoutes } from './web.api/routes';
+import { applicationRoutes } from './presentation/web.api/routes';
 
 
 

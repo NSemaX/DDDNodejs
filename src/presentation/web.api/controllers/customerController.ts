@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { StatusCode } from "../../infrastructure/utility/statusCodes";
-import { Types } from "../../infrastructure/utility/DiTypes";
-import { CustomerCreateRequest } from "../../application/dtos/customer/customerCreateRequest";
-import { CustomerUpdateRequest } from "../../application/dtos/customer/customerUpdateRequest";
-import { ICustomerApplicationService } from "../../application/application.service/customerApplicationService";
+import { ICustomerApplicationService } from "../../../application/application.service/customerApplicationService";
+import { Types } from "../../../infrastructure/utility/DiTypes";
+import { StatusCode } from "../../../infrastructure/utility/statusCodes";
+import { CustomerCreateRequest } from "../../../application/dtos/customer/customerCreateRequest";
+import { CustomerUpdateRequest } from "../../../application/dtos/customer/customerUpdateRequest";
+
 
 
 export interface ICustomerController {

@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { StatusCode } from "../../infrastructure/utility/statusCodes";
-import { Types } from "../../infrastructure/utility/DiTypes";
-import { IProductApplicationService } from "../../application/application.service/productApplicationService";
-import { ProductCreateRequest } from "../../application/dtos/product/productCreateRequest";
-import { ProductUpdateRequest } from "../../application/dtos/product/productUpdateRequest";
+import { IProductApplicationService } from "../../../application/application.service/productApplicationService";
+import { Types } from "../../../infrastructure/utility/DiTypes";
+import { StatusCode } from "../../../infrastructure/utility/statusCodes";
+import { ProductCreateRequest } from "../../../application/dtos/product/productCreateRequest";
+import { ProductUpdateRequest } from "../../../application/dtos/product/productUpdateRequest";
+
 
 
 

@@ -1,5 +1,5 @@
 import { Dialect, Options, Sequelize } from "sequelize";
-import { vars } from "./config";
+import { vars } from "../config/dbconfig";
 class SequelizeConnection {
   private static instance: Sequelize;
 

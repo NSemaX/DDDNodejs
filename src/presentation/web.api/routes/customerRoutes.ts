@@ -1,7 +1,8 @@
 import express from "express";
-import { Types } from "../../infrastructure/utility/DiTypes";
-import { dIContainer } from "../../inversify.config";
 import { ICustomerController } from "../controllers/customerController";
+import { dIContainer } from "../../../infrastructure/config/inversify.config";
+import { Types } from "../../../infrastructure/utility/DiTypes";
+
 
 class CustomerRoutes {
   router = express.Router();

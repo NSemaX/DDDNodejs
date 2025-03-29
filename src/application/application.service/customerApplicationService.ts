@@ -8,6 +8,7 @@ import { Types } from "../../infrastructure/utility/DiTypes";
 import { ICustomerRepository } from "../../domain/models/customer/ICustomerRepository";
 import { Address } from "../../domain/models/customer/address";
 import { Customer } from "../../domain/models/customer/customer";
+import { CustomerStatus } from "../../domain/models/customer/customerStatus";
 
 
 export interface ICustomerApplicationService {
@@ -108,7 +109,7 @@ export class CustomerApplicationService implements ICustomerApplicationService {
         Surname: customer.Surname,
         Email: customer.Email,
         Password: customer.Password,
-        Status: 1,
+        Status: CustomerStatus.Active,
         Address: Address.create({
           StreetAddress: customer.Address.StreetAddress,
           City: customer.Address.City,
@@ -119,8 +120,8 @@ export class CustomerApplicationService implements ICustomerApplicationService {
 
       return this.CustomerRepository.update(Id, customerparam);
 
-    } catch {
-      throw new Error("Unable to updated Customer");
+    } catch (ex) {
+      throw new Error(`Unable to create Customer: ${(ex as Error).message}`);
     }
   };
 

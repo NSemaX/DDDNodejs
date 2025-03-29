@@ -1,7 +1,8 @@
 import express from "express";
-import { Types } from "../../infrastructure/utility/DiTypes";
-import { dIContainer } from "../../inversify.config";
 import { IOrderController } from "../controllers/orderController";
+import { dIContainer } from "../../../infrastructure/config/inversify.config";
+import { Types } from "../../../infrastructure/utility/DiTypes";
+
 
 class OrderRoutes {
   router = express.Router();
@@ -19,6 +20,9 @@ class OrderRoutes {
 
     // Retrieve a single Order with id
     this.router.get("/:id", this.orderController.getOrderById);
+    
+    // Retrieve a Orders with customerId
+    this.router.get("/customers/:id", this.orderController.getOrdersByCustomerId);
 
     // Create a new Order
     this.router.post("/", this.orderController.createOrder);
